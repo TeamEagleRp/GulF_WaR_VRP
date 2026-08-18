@@ -1,11 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const session = require('express-session'); // <--- أضف هذا السطر هنا
+const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 
-// استدعاء البوت لتشغيله مع السيرفر بنفس الوقت (اختياري)
+// استدعاء البوت لتشغيله مع السيرفر تلقائياً (اختياري)
 require('./bot.js');
 
 const app = express();
@@ -33,7 +33,7 @@ const DATA_FILE = path.join(__dirname, 'achievements.json');
 if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2));
 
 function getAchievements() {
-    try { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); } 
+    try { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
     catch { return []; }
 }
 
@@ -46,21 +46,25 @@ app.get('/api/me', (req, res) => {
     }
 });
 
+// مسار تسجيل الدخول عبر ديسكورد
 app.get('/api/login', (req, res) => {
     const redirectUri = process.env.REDIRECT_URI || `${req.protocol}://${req.get('host')}/api/auth/callback`;
     const clientId = process.env.DISCORD_CLIENT_ID;
 
     if (!clientId) {
-        return res.status(500).json({ error: 'DISCORD_CLIENT_ID غير موجود في متغيرات البيئة' });
+        return res.status(500).json({ error: 'DISCORD_CLIENT_ID is not configured.' });
     }
 
-    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify%20guilds`;
-    res.redirect(discordAuthUrl); 
+    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify`;
+    res.redirect(discordAuthUrl);
 });
 
+// مسار استقبال العودة من ديسكورد (OAuth2 Callback)
 app.get('/api/auth/callback', async (req, res) => {
     const code = req.query.code;
     if (!code) return res.redirect('/');
+
+    const redirectUri = process.env.REDIRECT_URI || `${req.protocol}://${req.get('host')}/api/auth/callback`;
 
     try {
         const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
@@ -70,15 +74,21 @@ app.get('/api/auth/callback', async (req, res) => {
                 client_secret: process.env.DISCORD_CLIENT_SECRET,
                 grant_type: 'authorization_code',
                 code,
-                redirect_uri: process.env.REDIRECT_URI || `http://localhost:${PORT}/api/auth/callback`,
+                redirect_uri: redirectUri,
             }),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         });
 
         const tokenData = await tokenRes.json();
+        if (!tokenData.access_token) {
+            console.error('Failed to obtain access token:', tokenData);
+            return res.redirect('/');
+        }
+
         const userRes = await fetch('https://discord.com/api/users/@me', {
             headers: { authorization: `${tokenData.token_type} ${tokenData.access_token}` },
         });
+
         const userData = await userRes.json();
 
         req.session.user = {
@@ -86,7 +96,7 @@ app.get('/api/auth/callback', async (req, res) => {
             username: userData.username,
             avatar: userData.avatar 
                 ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
-                : 'https://cdn.discordapp.com/embed/avatars/0.png'
+                : `https://cdn.discordapp.com/embed/avatars/0.png`
         };
 
         res.redirect('/');
@@ -96,32 +106,48 @@ app.get('/api/auth/callback', async (req, res) => {
     }
 });
 
+// مسار تسجيل الخروج
 app.get('/api/logout', (req, res) => {
-    req.session.destroy(() => res.json({ success: true }));
+    req.session.destroy(() => {
+        res.redirect('/');
+    });
 });
 
+// مسارات الإنجازات (Achievements)
 app.get('/api/achievements', (req, res) => {
     res.json(getAchievements());
 });
 
-app.post('/api/achievements', upload.single('imageFile'), (req, res) => {
+app.post('/api/achievements', upload.single('image'), (req, res) => {
     if (!req.session.user || !ADMIN_IDS.includes(req.session.user.id)) {
-        return res.status(403).json({ error: 'غير مصرح' });
+        return res.status(403).json({ error: 'غير مصرح لك بالإضافة' });
     }
+
+    const { title, description } = req.body;
     const achievements = getAchievements();
-    const newAch = {
+    const newAchievement = {
         id: Date.now().toString(),
-        title: req.body.title || 'إنجاز جديد',
-        emoji: req.body.emoji || '🏆',
-        imageUrl: req.file ? `/uploads/${req.file.filename}` : (req.body.imageUrl || ''),
-        author: req.session.user.username,
-        createdAt: new Date().toLocaleDateString('ar-EG')
+        title,
+        description,
+        image: req.file ? `/uploads/${req.file.filename}` : null
     };
-    achievements.unshift(newAch);
+
+    achievements.push(newAchievement);
     fs.writeFileSync(DATA_FILE, JSON.stringify(achievements, null, 2));
-    res.json({ success: true, achievement: newAch });
+    res.json({ success: true, achievement: newAchievement });
+});
+
+app.delete('/api/achievements/:id', (req, res) => {
+    if (!req.session.user || !ADMIN_IDS.includes(req.session.user.id)) {
+        return res.status(403).json({ error: 'غير مصرح لك بالحذف' });
+    }
+
+    let achievements = getAchievements();
+    achievements = achievements.filter(a => a.id !== req.params.id);
+    fs.writeFileSync(DATA_FILE, JSON.stringify(achievements, null, 2));
+    res.json({ success: true });
 });
 
 app.listen(PORT, () => {
-    console.log(`🌐 Web Server running on: http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
