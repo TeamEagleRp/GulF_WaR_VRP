@@ -48,21 +48,69 @@ app.get('/api/me', (req, res) => {
 
 // مسار تسجيل الدخول عبر ديسكورد
 app.get('/api/login', (req, res) => {
-    let redirectUri = process.env.REDIRECT_URI || `${req.protocol}://${req.get('host')}/api/auth/callback`;
+    let hostUri = process.env.REDIRECT_URI || `${req.get('host')}/api/auth/callback`;
+    // تنظيف الأطراف وإزالة https:// أو http:// إن وُجدت
+    hostUri = hostUri.trim().replace(/^https?:\/\//, '');
     
-    // تنظيف الرابط في حال وجود تكرار لـ https:// أو مسافات
-    redirectUri = redirectUri.trim().replace(/^https?:\/\//, '');
-    redirectUri = `https://${redirectUri}`;
-
+    const fullRedirectUrl = `https://${hostUri}`;
     const clientId = process.env.DISCORD_CLIENT_ID ? process.env.DISCORD_CLIENT_ID.trim() : '';
 
     if (!clientId) {
         return res.status(500).json({ error: 'DISCORD_CLIENT_ID is not configured.' });
     }
 
-    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify`;
+    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(fullRedirectUrl)}&response_type=code&scope=identify`;
     
     res.json({ url: discordAuthUrl });
+});
+
+// مسار استقبال التوكن (Callback)
+app.get('/api/auth/callback', async (req, res) => {
+    const code = req.query.code;
+    if (!code) return res.redirect('/');
+
+    let hostUri = process.env.REDIRECT_URI || `${req.get('host')}/api/auth/callback`;
+    hostUri = hostUri.trim().replace(/^https?:\/\//, '');
+    const fullRedirectUrl = `https://${hostUri}`;
+
+    try {
+        const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
+            method: 'POST',
+            body: new URLSearchParams({
+                client_id: process.env.DISCORD_CLIENT_ID.trim(),
+                client_secret: process.env.DISCORD_CLIENT_SECRET.trim(),
+                grant_type: 'authorization_code',
+                code,
+                redirect_uri: fullRedirectUrl,
+            }),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        });
+
+        const tokenData = await tokenRes.json();
+        if (!tokenData.access_token) {
+            console.error('Failed to obtain access token:', tokenData);
+            return res.redirect('/');
+        }
+
+        const userRes = await fetch('https://discord.com/api/users/@me', {
+            headers: { authorization: `${tokenData.token_type} ${tokenData.access_token}` },
+        });
+
+        const userData = await userRes.json();
+
+        req.session.user = {
+            id: userData.id,
+            username: userData.username,
+            avatar: userData.avatar 
+                ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
+                : `https://cdn.discordapp.com/embed/avatars/0.png`
+        };
+
+        res.redirect('/');
+    } catch (err) {
+        console.error('OAuth Error:', err);
+        res.redirect('/');
+    }
 });
 
 // مسار استقبال العودة من ديسكورد (OAuth2 Callback)
