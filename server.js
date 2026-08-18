@@ -47,10 +47,14 @@ app.get('/api/me', (req, res) => {
 });
 
 // مسار تسجيل الدخول عبر ديسكورد
-// مسار تسجيل الدخول عبر ديسكورد
 app.get('/api/login', (req, res) => {
-    const redirectUri = process.env.REDIRECT_URI || `${req.protocol}://${req.get('host')}/api/auth/callback`;
-    const clientId = process.env.DISCORD_CLIENT_ID;
+    let redirectUri = process.env.REDIRECT_URI || `${req.protocol}://${req.get('host')}/api/auth/callback`;
+    
+    // تنظيف الرابط في حال وجود تكرار لـ https:// أو مسافات
+    redirectUri = redirectUri.trim().replace(/^https?:\/\//, '');
+    redirectUri = `https://${redirectUri}`;
+
+    const clientId = process.env.DISCORD_CLIENT_ID ? process.env.DISCORD_CLIENT_ID.trim() : '';
 
     if (!clientId) {
         return res.status(500).json({ error: 'DISCORD_CLIENT_ID is not configured.' });
@@ -58,7 +62,6 @@ app.get('/api/login', (req, res) => {
 
     const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify`;
     
-    // إرجاع الرابط كـ JSON بدلاً من res.redirect
     res.json({ url: discordAuthUrl });
 });
 
