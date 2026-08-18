@@ -55,7 +55,7 @@ app.get('/api/login', (req, res) => {
     }
 
     const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify%20guilds`;
-    res.redirect(discordAuthUrl); https://gulf-war-vrp.onrender.com/api/auth/callback
+    res.redirect(discordAuthUrl); 
 });
 
 app.get('/api/auth/callback', async (req, res) => {
