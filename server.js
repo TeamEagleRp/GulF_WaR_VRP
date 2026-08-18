@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session'); // <--- أضف هذا السطر هنا
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
