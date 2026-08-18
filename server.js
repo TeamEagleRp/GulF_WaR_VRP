@@ -47,6 +47,7 @@ app.get('/api/me', (req, res) => {
 });
 
 // مسار تسجيل الدخول عبر ديسكورد
+// مسار تسجيل الدخول عبر ديسكورد
 app.get('/api/login', (req, res) => {
     const redirectUri = process.env.REDIRECT_URI || `${req.protocol}://${req.get('host')}/api/auth/callback`;
     const clientId = process.env.DISCORD_CLIENT_ID;
@@ -56,7 +57,9 @@ app.get('/api/login', (req, res) => {
     }
 
     const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify`;
-    res.redirect(discordAuthUrl);
+    
+    // إرجاع الرابط كـ JSON بدلاً من res.redirect
+    res.json({ url: discordAuthUrl });
 });
 
 // مسار استقبال العودة من ديسكورد (OAuth2 Callback)
