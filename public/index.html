@@ -728,6 +728,33 @@
             }
         }
 
+        // دالة عرض الإنجازات للجميع
+async function loadAchievements() {
+    const res = await fetch('/api/achievements');
+    const achievements = await res.json();
+    
+    const container = document.getElementById('achievements-container');
+    if (!container) return;
+
+    if (achievements.length === 0) {
+        container.innerHTML = '<p>لا توجد إنجازات مضافة حالياً</p>';
+        return;
+    }
+
+    container.innerHTML = achievements.map(item => `
+        <div class="achievement-card">
+            ${item.image ? `<img src="${item.image}" alt="${item.title}" />` : ''}
+            <h3>${item.title}</h3>
+            <p>${item.description}</p>
+        </div>
+    `).join('');
+}
+
+// تشغيل القراءة عند فتح الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    loadAchievements();
+});
+
         // Init App & Start Live Discord Counter Updates (Every 20 seconds)
         checkAuth();
         fetchDiscordOnlineUsers();

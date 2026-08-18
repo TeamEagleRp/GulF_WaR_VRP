@@ -205,3 +205,64 @@ app.delete('/api/achievements/:id', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+// ملف البيانات التخزيني
+const DATA_FILE = path.join(__dirname, 'data.json');
+
+// دالة قراءة البيانات التخزينية
+function getStoredData() {
+    try {
+        if (!fs.existsSync(DATA_FILE)) {
+            const initialData = { achievements: [], serverInfo: {} };
+            fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2));
+            return initialData;
+        }
+        return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    } catch {
+        return { achievements: [], serverInfo: {} };
+    }
+}
+
+// ----------------- مسارات الإنجازات -----------------
+app.get('/api/achievements', (req, res) => {
+    const data = getStoredData();
+    res.json(data.achievements || []);
+});
+
+app.post('/api/achievements', upload.single('image'), (req, res) => {
+    if (!req.session.user || !ADMIN_IDS.includes(req.session.user.id)) {
+        return res.status(403).json({ error: 'غير مصرح لك بالإضافة' });
+    }
+
+    const { title, description } = req.body;
+    const data = getStoredData();
+    
+    const newAchievement = {
+        id: Date.now().toString(),
+        title,
+        description,
+        image: req.file ? `/uploads/${req.file.filename}` : null
+    };
+
+    data.achievements.push(newAchievement);
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+    res.json({ success: true, achievement: newAchievement });
+});
+
+// ----------------- مسارات معلومات السيرفر -----------------
+app.get('/api/server-info', (req, res) => {
+    const data = getStoredData();
+    res.json(data.serverInfo || {});
+});
+
+app.post('/api/server-info', (req, res) => {
+    if (!req.session.user || !ADMIN_IDS.includes(req.session.user.id)) {
+        return res.status(403).json({ error: 'غير مصرح لك بالتحديث' });
+    }
+
+    const data = getStoredData();
+    data.serverInfo = req.body; // تخزين البيانات القادمة من الأدمن
+
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+    res.json({ success: true, serverInfo: data.serverInfo });
+});
