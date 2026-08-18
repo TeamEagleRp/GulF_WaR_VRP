@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GulF WaR RP | المجتمع الرسمي</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Tajawal & Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-red': '#e50914',
+                        'dark-bg': '#0b0b0e',
+                        'glass-card': 'rgba(18, 18, 24, 0.75)',
+                    },
+                    fontFamily: {
+                        'cairo': ['Cairo', 'sans-serif'],
+                        'tajawal': ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #0b0b0e;
+            background-image: 
+                linear-gradient(to bottom, rgba(11, 11, 14, 0.85), rgba(11, 11, 14, 0.92)),
+                url('6.png.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #ffffff;
+        }
+        .glass-card {
+            background: rgba(18, 18, 24, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .glass-nav {
+            background: rgba(10, 10, 14, 0.85);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-red selection:text-white relative">
+
+    <!-- ================= 1. PAGE: LOGIN / LANDING SCREEN ================= -->
+    <div id="landing-page" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-card border border-brand-red/40 rounded-3xl p-8 sm:p-12 max-w-lg w-full text-center space-y-8 shadow-2xl shadow-brand-red/10 animate-fadeIn">
+            
+            <div class="relative inline-block">
+                <img src="3.png..png" class="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl object-cover mx-auto border-2 border-brand-red shadow-2xl shadow-brand-red/50 animate-pulse" alt="GulF WaR Logo">
+                <span class="absolute -bottom-2 -right-2 bg-brand-red text-white text-[10px] font-black px-3 py-1 rounded-full shadow">PS4 / PS5</span>
+            </div>
+
+            <div class="space-y-2">
+                <h1 class="text-3xl sm:text-4xl font-black font-tajawal text-white">GulF WaR RP</h1>
+                <p class="text-gray-400 text-xs sm:text-sm">المجتمع الرسمي لسيرفر قراند الحياة الواقعية الخليجي</p>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <button onclick="loginWithDiscord()" class="w-full py-3.5 px-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-2xl transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-3 group">
+                    <i class="fa-brands fa-discord text-xl group-hover:scale-110 transition-transform"></i>
+                    <span>تسجيل الدخول عبر ديسكورد</span>
+                </button>
+
+                <button onclick="enterSite()" class="w-full py-3.5 px-6 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm rounded-2xl transition-all flex items-center justify-center gap-2 group">
+                    <span>الدخول إلى الموقع مباشرة</span>
+                    <i class="fa-solid fa-arrow-left text-brand-red group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+
+            <div class="pt-2 border-t border-white/10">
+                <a href="https://discord.gg/nAWMmwRcZ4" target="_blank" class="text-xs text-gray-400 hover:text-amber-400 transition-colors flex items-center justify-center gap-1.5">
+                    <i class="fa-brands fa-discord"></i>
+                    <span>رابط سيرفر الديسكورد المباشر</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ================= 2. MAIN WEBSITE CONTENT ================= -->
+    <div id="main-website" class="hidden min-h-screen flex flex-col justify-between pb-20 md:pb-10">
+
+        <!-- HEADER / NAVBAR -->
+        <header class="sticky top-0 z-50 glass-nav border-b border-white/10 px-4 sm:px-8 py-4">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('hero')">
+                    <img src="3.png..png" class="w-10 h-10 rounded-xl object-cover border border-brand-red shadow-lg shadow-brand-red/30" alt="GulF WaR Logo">
+                    <div>
+                        <h1 class="font-black text-lg tracking-wider font-tajawal text-white">GulF WaR</h1>
+                        <p class="text-[10px] text-gray-400 -mt-1 font-semibold">المجتمع الرسمي</p>
+                    </div>
+                </div>
+
+                <nav class="hidden md:flex items-center gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/5 text-sm font-bold">
+                    <button id="nav-hero" onclick="switchTab('hero')" class="px-4 py-2.5 rounded-xl text-white bg-brand-red shadow-lg shadow-brand-red/30 border border-red-500/50 transition-all duration-300 flex items-center gap-2">
+                        <i class="fa-solid fa-house text-xs"></i>
+                        <span>الرئيسية</span>
+                    </button>
+                    <button id="nav-admins" onclick="switchTab('admins')" class="px-4 py-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center gap-2">
+                        <i class="fa-solid fa-crown text-xs text-amber-400"></i>
+                        <span>المسؤولين</span>
+                    </button>
+                    <button id="nav-achievements" onclick="switchTab('achievements')" class="px-4 py-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-xs text-amber-400"></i>
+                        <span>الإنجازات</span>
+                    </button>
+                    <button id="nav-info" onclick="switchTab('info')" class="px-4 py-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-xs text-blue-400"></i>
+                        <span>معلومات السيرفر</span>
+                    </button>
+                </nav>
+
+                <div id="auth-area">
+                    <button onclick="loginWithDiscord()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+                        <i class="fa-brands fa-discord text-base"></i>
+                        <span>انضم للسيرفر / تسجيل</span>
+                    </button>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8 flex-1 w-full">
+
+            <!-- PAGE 1: HERO SECTION -->
+            <section id="hero" class="page-view animate-fadeIn">
+                <div class="glass-card rounded-3xl p-6 sm:p-10 md:p-12 relative overflow-hidden border border-brand-red/30 shadow-2xl text-center max-w-4xl mx-auto space-y-8">
+                    <div class="space-y-6">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-red/10 border border-brand-red/30 text-brand-red text-xs sm:text-sm font-bold mx-auto">
+                            <span class="w-2 h-2 rounded-full bg-brand-red animate-ping"></span>
+                            <span>أقوى سيرفر قراند حياة واقعية (GTA RP) خليجي</span>
+                        </div>
+
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight font-tajawal">
+                            مرحباً بك في عالم <br>
+                            <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-amber-400 to-red-600">
+                                GulF WaR VRP
+                            </span>
+                        </h1>
+
+                        <p class="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+                            التجربة الأفضل للحياة الواقعية في Grand Theft Auto V على منصة سوني (PS4 & PS5)! وظائف مدنية وعسكرية، عصابات ومافيا، اقتصاد متوازن، وأنظمة حصرية مصممة لتقديم أقصى درجات الواقعية والتفاعل.
+                        </p>
+
+                        <div class="pt-2 max-w-md mx-auto">
+                            <a href="https://discord.gg/nAWMmwRcZ4" target="_blank" class="w-full py-4 px-8 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-base rounded-2xl transition-all shadow-xl shadow-indigo-600/40 flex items-center justify-center gap-3 border border-indigo-400/30 group">
+                                <i class="fa-brands fa-discord text-2xl group-hover:scale-125 transition-transform duration-300"></i>
+                                <span>انضم للسيرفر الآن</span>
+                                <i class="fa-solid fa-arrow-left text-sm group-hover:-translate-x-1 transition-transform"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- عداد المتصلين المباشر بالسيرفر من الديسكورد (يتحدث كل 20 ثانية) -->
+                    <div class="pt-6 border-t border-white/10 max-w-md mx-auto">
+                        <div class="bg-black/50 border border-white/10 rounded-2xl p-4 flex items-center justify-between shadow-inner">
+                            <div class="flex items-center gap-3">
+                                <div class="relative flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xs text-gray-400 font-bold block">حالة سيرفر الديسكورد</span>
+                                    <span id="discord-server-name" class="text-sm font-black text-white">GulF WaR RP</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 rounded-xl text-center">
+                                <span id="discord-online-count" class="text-xl font-black text-emerald-400 font-mono block">...</span>
+                                <span class="text-[10px] font-bold text-emerald-300/80 uppercase">عضو متصل الآن</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- PAGE 2: ADMINS SECTION -->
+            <section id="admins" class="page-view hidden animate-fadeIn space-y-6">
+                <div class="text-center space-y-3">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold">
+                        <i class="fa-solid fa-crown text-amber-400"></i>
+                        <span>إدارة السيرفر</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white font-tajawal">المسؤولين والمؤسسين</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    
+                    <!-- OWNER #1: S5N -->
+                    <div class="glass-card rounded-2xl p-5 flex items-center justify-between border border-white/10 hover:border-amber-500/60 hover:-translate-y-2 hover:shadow-[0_10px_25px_rgba(245,158,11,0.2)] transition-all duration-300 group">
+                        <div class="space-y-2 text-right flex-1 pl-4">
+                            <div class="flex items-center gap-1.5 justify-end">
+                                <span class="text-xs text-blue-400"><i class="fa-solid fa-circle-check"></i></span>
+                                <h3 class="text-lg font-extrabold text-white font-tajawal">• it’s S5N , ⁷¹⁷</h3>
+                            </div>
+                            <div class="inline-block bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-xl text-xs font-bold">
+                                <i class="fa-solid fa-crown ml-1"></i> المسؤول الاول / The king
+                            </div>
+                            <div>
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-black/50 border border-white/10 rounded-lg text-xs font-mono text-gray-300">
+                                    <span>s5n1.@</span>
+                                    <i class="fa-brands fa-discord text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative shrink-0 flex flex-col items-center">
+                            <img src="2.png" class="w-24 h-24 rounded-2xl object-cover border-2 border-amber-500 shadow-lg group-hover:scale-105 transition-transform duration-300">
+                            <span class="bg-amber-500 text-black font-black text-[10px] px-2.5 py-0.5 rounded-b-md uppercase tracking-wider shadow -mt-1 z-10 w-[90%] text-center">OWNER #1</span>
+                        </div>
+                    </div>
+
+                    <!-- OWNER #2: DXR -->
+                    <div class="glass-card rounded-2xl p-5 flex items-center justify-between border border-white/10 hover:border-brand-red/60 hover:-translate-y-2 hover:shadow-[0_10px_25px_rgba(229,9,20,0.2)] transition-all duration-300 group">
+                        <div class="space-y-2 text-right flex-1 pl-4">
+                            <div class="flex items-center gap-1.5 justify-end">
+                                <span class="text-xs text-red-500"><i class="fa-solid fa-fire"></i></span>
+                                <h3 class="text-lg font-extrabold text-white font-tajawal">DXR ⁷⁰⁷</h3>
+                            </div>
+                            <div class="inline-block bg-brand-red/20 text-red-300 border border-brand-red/40 px-3 py-1 rounded-xl text-xs font-bold">
+                                <i class="fa-solid fa-crown ml-1"></i> المسؤول الثاني / Co The king
+                            </div>
+                            <div>
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-black/50 border border-white/10 rounded-lg text-xs font-mono text-gray-300">
+                                    <span>_z_x@</span>
+                                    <i class="fa-brands fa-discord text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative shrink-0 flex flex-col items-center">
+                            <img src="1.png..png" class="w-24 h-24 rounded-2xl object-cover border-2 border-brand-red shadow-lg group-hover:scale-105 transition-transform duration-300">
+                            <span class="bg-brand-red text-white font-black text-[10px] px-2.5 py-0.5 rounded-b-md uppercase tracking-wider shadow -mt-1 z-10 w-[90%] text-center">OWNER #2</span>
+                        </div>
+                    </div>
+
+                    <!-- OWNER #3: العود -->
+                    <div class="glass-card rounded-2xl p-5 flex items-center justify-between border border-white/10 hover:border-amber-500/60 hover:-translate-y-2 hover:shadow-[0_10px_25px_rgba(245,158,11,0.2)] transition-all duration-300 group">
+                        <div class="space-y-2 text-right flex-1 pl-4">
+                            <div class="flex items-center gap-1.5 justify-end">
+                                <span class="text-xs text-blue-400"><i class="fa-solid fa-circle-check"></i></span>
+                                <h3 class="text-lg font-extrabold text-white font-tajawal">-# العود</h3>
+                            </div>
+                            <div class="inline-block bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-xl text-xs font-bold">
+                                <i class="fa-solid fa-shield-halved ml-1"></i> المسؤول الثالث / The Crown
+                            </div>
+                            <div>
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-black/50 border border-white/10 rounded-lg text-xs font-mono text-gray-300">
+                                    <span>_oud_@</span>
+                                    <i class="fa-brands fa-discord text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative shrink-0 flex flex-col items-center">
+                            <img src="4.png" class="w-24 h-24 rounded-2xl object-cover border-2 border-amber-500 shadow-lg group-hover:scale-105 transition-transform duration-300">
+                            <span class="bg-amber-500 text-black font-black text-[10px] px-2.5 py-0.5 rounded-b-md uppercase tracking-wider shadow -mt-1 z-10 w-[90%] text-center">OWNER #3</span>
+                        </div>
+                    </div>
+
+                    <!-- OWNER #4: مطيري -->
+                    <div class="glass-card rounded-2xl p-5 flex items-center justify-between border border-white/10 hover:border-brand-red/60 hover:-translate-y-2 hover:shadow-[0_10px_25px_rgba(229,9,20,0.2)] transition-all duration-300 group">
+                        <div class="space-y-2 text-right flex-1 pl-4">
+                            <div class="flex items-center gap-1.5 justify-end">
+                                <span class="text-xs text-blue-400"><i class="fa-solid fa-circle-check"></i></span>
+                                <h3 class="text-lg font-extrabold text-white font-tajawal">• !مطيري</h3>
+                            </div>
+                            <div class="inline-block bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-xl text-xs font-bold">
+                                <i class="fa-solid fa-shield-halved ml-1"></i> المسؤول الرابع / The Crown
+                            </div>
+                            <div>
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-black/50 border border-white/10 rounded-lg text-xs font-mono text-gray-300">
+                                    <span>qe.8@</span>
+                                    <i class="fa-brands fa-discord text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative shrink-0 flex flex-col items-center">
+                            <img src="5.png" class="w-24 h-24 rounded-2xl object-cover border-2 border-brand-red shadow-lg group-hover:scale-105 transition-transform duration-300">
+                            <span class="bg-brand-red text-white font-black text-[10px] px-2.5 py-0.5 rounded-b-md uppercase tracking-wider shadow -mt-1 z-10 w-[90%] text-center">OWNER #4</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- PAGE 3: ACHIEVEMENTS SECTION -->
+            <section id="achievements" class="page-view hidden animate-fadeIn space-y-8">
+                <div class="text-center space-y-3">
+                    <h2 class="text-3xl sm:text-4xl font-black text-white font-tajawal">إنجازات GulF WaR</h2>
+                    <p class="text-xs text-gray-400">سجل الإنجازات واللحظات المميزة في السيرفر</p>
+                </div>
+
+                <div id="admin-achievement-form" class="hidden glass-card p-6 rounded-2xl max-w-xl mx-auto border border-amber-500/40">
+                    <h3 class="text-lg font-bold text-amber-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle"></i> إضافة إنجاز جديد (لوحة المسؤول)
+                    </h3>
+                    <form onsubmit="addAchievement(event)" id="ach-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs text-gray-300 mb-1">اسم الإنجاز / الوصف</label>
+                            <input type="text" id="ach-title" required placeholder="مثال: الوصول إلى 1000 عضو" class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-red">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs text-gray-300 mb-1">الإيموجي</label>
+                            <input list="emoji-list" id="ach-emoji" placeholder="🏆 اختر أو اكتب الإيموجي..." class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-red">
+                            <datalist id="emoji-list">
+                                <option value="🏆">🏆 كأس الإنجازات</option>
+                                <option value="👑">👑 تاج القيادة</option>
+                                <option value="⭐">⭐ نجمة تميز</option>
+                                <option value="🔥">🔥 أسطوري</option>
+                            </datalist>
+                        </div>
+                        
+                        <div class="space-y-3 p-3 bg-black/30 rounded-xl border border-white/5">
+                            <label class="block text-xs font-bold text-amber-400">إرفاق صورة الإنجاز:</label>
+                            <div>
+                                <input type="file" id="ach-file" accept="image/*" class="w-full bg-black/60 border border-white/10 rounded-xl p-2 text-xs text-gray-300">
+                            </div>
+                            <div>
+                                <input type="url" id="ach-image" placeholder="https://..." class="w-full bg-black/60 border border-white/10 rounded-xl p-2.5 text-xs text-white">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-xl transition-all">نشر الإنجاز</button>
+                    </form>
+                </div>
+
+                <div id="achievements-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
+
+            <!-- PAGE 4: SERVER INFO SECTION -->
+            <section id="info" class="page-view hidden animate-fadeIn space-y-10">
+                <div class="text-center space-y-3">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-950/80 border border-blue-500/50 text-blue-400 text-sm font-bold">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        <span>دليل قراند الحياة الواقعية</span>
+                    </div>
+                    <h2 class="text-4xl sm:text-5xl font-black text-white font-tajawal">معلومات وقوانين GulF WaR RP</h2>
+                    <p class="text-gray-300 text-base max-w-2xl mx-auto">كل ما تحتاج معرفته للدخول إلى السيرفر والالتزام بأنظمة الرول بلاي</p>
+                </div>
+
+                <div id="admin-info-controls" class="hidden glass-card p-6 rounded-3xl border border-amber-500/50 max-w-4xl mx-auto space-y-6 bg-black/60">
+                    <h3 class="text-xl font-black text-amber-400 flex items-center gap-2 border-b border-white/10 pb-3">
+                        <i class="fa-solid fa-sliders"></i> لوحة إدارة قسم المعارف والقوانين (للمسؤولين)
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-3 bg-white/5 p-4 rounded-2xl border border-white/10">
+                            <h4 class="font-bold text-sm text-amber-300"><i class="fa-solid fa-plus-circle"></i> إضافة قطاع جديد</h4>
+                            <input type="text" id="new-sector-title" placeholder="اسم القطاع..." class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-400">
+                            <input type="text" id="new-sector-desc" placeholder="وصف القطاع..." class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-amber-400">
+                            <button onclick="addSector()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-black font-bold text-xs rounded-xl transition-all">إضافة القطاع</button>
+                        </div>
+
+                        <div class="space-y-3 bg-white/5 p-4 rounded-2xl border border-white/10">
+                            <h4 class="font-bold text-sm text-brand-red"><i class="fa-solid fa-plus-circle"></i> إضافة قانون جديد</h4>
+                            <input type="text" id="new-rule-title" placeholder="اسم القانون..." class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-red">
+                            <input type="text" id="new-rule-desc" placeholder="شرح القانون..." class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-red">
+                            <button onclick="addRule()" class="w-full py-2.5 bg-brand-red hover:bg-red-700 text-white font-bold text-xs rounded-xl transition-all">إضافة القانون</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div class="glass-card p-8 rounded-3xl space-y-6 border border-white/10 hover:border-amber-500/40 transition-all shadow-xl">
+                        <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-2xl">
+                                <i class="fa-solid fa-building-shield"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-2xl text-white font-tajawal">القطاعات المتاحة</h3>
+                                <p class="text-xs text-gray-400">الوظائف والجهات المعتمدة</p>
+                            </div>
+                        </div>
+
+                        <ul id="sectors-list" class="space-y-4 text-sm text-gray-200"></ul>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-3xl space-y-6 border border-white/10 hover:border-brand-red/40 transition-all shadow-xl">
+                        <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-red/20 border border-brand-red/40 flex items-center justify-center text-brand-red text-2xl">
+                                <i class="fa-solid fa-gamepad"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-2xl text-white font-tajawal">بيانات الاتصال</h3>
+                                <p class="text-xs text-gray-400">معلومات المنصة والديسكورد</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-5">
+                            <div class="bg-black/40 p-4 rounded-2xl border border-white/5 space-y-1">
+                                <span class="text-xs text-gray-400 font-bold block">المنصة والاسم المعتمد:</span>
+                                <span class="font-black text-base text-white block">GulF WaR Roleplay | PlayStation (PS4 / PS5)</span>
+                            </div>
+
+                            <div class="bg-black/40 p-4 rounded-2xl border border-white/5 space-y-2">
+                                <span class="text-xs text-gray-400 font-bold block">رابط دخول الديسكورد المباشر:</span>
+                                <a href="https://discord.gg/nAWMmwRcZ4" target="_blank" class="font-mono text-indigo-400 font-bold hover:underline dir-ltr text-right block text-base bg-indigo-950/40 p-3 rounded-xl border border-indigo-500/30 text-center">
+                                    https://discord.gg/nAWMmwRcZ4
+                                </a>
+                            </div>
+
+                            <div class="bg-amber-500/10 p-4 rounded-2xl border border-amber-500/30 text-xs text-amber-300 leading-relaxed">
+                                <i class="fa-solid fa-circle-info ml-1 text-amber-400"></i>
+                                تأكد من الانضمام لفرع السيرفر الصحيح على ديسكورد للحصول على الرتب والمشاركة في جلسات الرول بلاي.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-3xl space-y-6 border border-white/10 hover:border-blue-500/40 transition-all shadow-xl">
+                        <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 text-2xl">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-2xl text-white font-tajawal">قوانين الرول بلاي</h3>
+                                <p class="text-xs text-gray-400">الأنظمة الواجب اتباعها</p>
+                            </div>
+                        </div>
+
+                        <ul id="rules-list" class="space-y-4 text-sm text-gray-200"></ul>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Navigation Bar for Mobile -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-nav border-t border-brand-red/30 px-3 py-2 flex items-center justify-around text-xs font-bold bg-black/95 backdrop-blur-xl">
+            <button id="mob-nav-hero" onclick="switchTab('hero')" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-brand-red">
+                <i class="fa-solid fa-house text-base"></i>
+                <span class="text-[10px]">الرئيسية</span>
+            </button>
+            <button id="mob-nav-admins" onclick="switchTab('admins')" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-gray-400 hover:text-white">
+                <i class="fa-solid fa-crown text-base"></i>
+                <span class="text-[10px]">المسؤولين</span>
+            </button>
+            <button id="mob-nav-achievements" onclick="switchTab('achievements')" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-gray-400 hover:text-white">
+                <i class="fa-solid fa-trophy text-base"></i>
+                <span class="text-[10px]">الإنجازات</span>
+            </button>
+            <button id="mob-nav-info" onclick="switchTab('info')" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-gray-400 hover:text-white">
+                <i class="fa-solid fa-circle-info text-base"></i>
+                <span class="text-[10px]">معلومات</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- JS LOGIC -->
+    <script>
+        let currentUser = null;
+        // أضع هنا أيدي سيرفر الديسكورد الخاص بك لربط العداد
+        const DISCORD_GUILD_ID = '1238933390919372861'; 
+
+        // دالة جلب عدد الأعضاء المتصلين بالديسكورد وتحديثها كل 20 ثانية
+        async function fetchDiscordOnlineUsers() {
+            try {
+                const res = await fetch(`https://discord.com/api/guilds/${DISCORD_GUILD_ID}/widget.json`);
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('discord-online-count').textContent = data.presence_count ?? '0';
+                    if (data.name) {
+                        document.getElementById('discord-server-name').textContent = data.name;
+                    }
+                } else {
+                    document.getElementById('discord-online-count').textContent = '—';
+                }
+            } catch (err) {
+                console.error('Discord Status Error:', err);
+                document.getElementById('discord-online-count').textContent = '—';
+            }
+        }
+
+        let sectorsData = [
+            { id: 1, title: 'قطاع الشرطة (LSPD)', desc: 'حفظ الأمن والاستجابة للبلاغات وضبط المخالفين.', icon: 'fa-shield-halved text-blue-400' },
+            { id: 2, title: 'قطاع الـ SSF', desc: 'القوات الخاصة والحماية الأمنية المشددة والمداهمات.', icon: 'fa-user-shield text-amber-400' },
+            { id: 3, title: 'قطاع الإسعاف (EMR)', desc: 'علاج المصابين والرعاية الطبية الطارئة.', icon: 'fa-truck-medical text-red-400' },
+            { id: 4, title: 'كراج الميكانيكي', desc: 'تصليح وتعديل وترقية وتزويد السيارات.', icon: 'fa-wrench text-amber-400' },
+            { id: 5, title: 'العصابات المعتمدة', desc: 'نظام منظم ومقنن للمافيا والكلانات بالتوافق مع الإدارة.', icon: 'fa-gun text-emerald-400' }
+        ];
+
+        let rulesData = [
+            { id: 1, title: 'تعريف الـ RDM', desc: 'القتل العشوائي بدون أي سيناريو أو سبب مقنع.' },
+            { id: 2, title: 'تعريف الـ VDM', desc: 'الصدم العشوائي واستخدام المركبة كسلاح لدهس اللاعبين.' },
+            { id: 3, title: 'تعريف الرول بلاي (RP)', desc: 'تقمص الشخصية الكامل بالأقوال والأفعال والالتزام بحدود الواقعية.' },
+            { id: 4, title: 'تعريف الـ LAR', desc: 'الخوف على حياتك وحياة الآخرين وعدم مجازفتك بنفسك.' },
+            { id: 5, title: 'الحاجز السمعي', desc: 'عدم السمع في حال وجود جدار أو باب مغلق أو مسافة بعيدة.' },
+            { id: 6, title: 'القانون الذهبي', desc: 'عدم رد الخطأ بالخطأ والتواصل مع الإدارة لحل المشاكل.' },
+            { id: 7, title: 'قانون الأعطال', desc: 'عند تفجر 3 كفرات من المركبة يجب التوقف الإجباري.' },
+            { id: 8, title: 'الميكروفون الإجباري', desc: 'يجب توفر ميكروفون بصوت واضح ومفهوم أثناء التفاوض واللعب.' }
+        ];
+
+        function enterSite() {
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('main-website').classList.remove('hidden');
+        }
+
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/me');
+                const data = await res.json();
+                const authArea = document.getElementById('auth-area');
+
+                if (data.loggedIn) {
+                    currentUser = data.user;
+                    authArea.innerHTML = `
+                        <div class="flex items-center gap-3 bg-black/50 border border-white/10 p-1.5 pr-4 rounded-xl">
+                            <span class="text-xs font-bold text-white">${currentUser.username}</span>
+                            <img src="${currentUser.avatar}" class="w-8 h-8 rounded-lg border border-brand-red">
+                            <button onclick="logout()" class="text-xs text-red-400 hover:text-red-300 p-1"><i class="fa-solid fa-right-from-bracket"></i></button>
+                        </div>
+                    `;
+                    if (currentUser.isAdmin) {
+                        document.getElementById('admin-achievement-form')?.classList.remove('hidden');
+                        document.getElementById('admin-info-controls')?.classList.remove('hidden');
+                    }
+                    enterSite();
+                } else {
+                    currentUser = null;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+            loadAchievements();
+            renderSectorsAndRules();
+        }
+
+        async function loginWithDiscord() {
+            const res = await fetch('/api/login');
+            const data = await res.json();
+            window.location.href = data.url;
+        }
+
+        async function logout() {
+            await fetch('/api/logout');
+            window.location.reload();
+        }
+
+        function switchTab(tabId) {
+            const tabs = ['hero', 'admins', 'achievements', 'info'];
+
+            tabs.forEach(id => {
+                const view = document.getElementById(id);
+                if (view) view.classList.toggle('hidden', id !== tabId);
+            });
+
+            tabs.forEach(id => {
+                const btn = document.getElementById(`nav-${id}`);
+                if (btn) {
+                    btn.className = (id === tabId) 
+                        ? "px-4 py-2.5 rounded-xl text-white bg-brand-red shadow-lg shadow-brand-red/30 border border-red-500/50 transition-all duration-300 flex items-center gap-2"
+                        : "px-4 py-2.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 flex items-center gap-2";
+                }
+            });
+
+            tabs.forEach(id => {
+                const mobBtn = document.getElementById(`mob-nav-${id}`);
+                if (mobBtn) {
+                    mobBtn.className = (id === tabId)
+                        ? "flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-brand-red"
+                        : "flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-gray-400 hover:text-white";
+                }
+            });
+        }
+
+        function renderSectorsAndRules() {
+            const sectorsList = document.getElementById('sectors-list');
+            const rulesList = document.getElementById('rules-list');
+
+            if (sectorsList) {
+                sectorsList.innerHTML = sectorsData.map(s => `
+                    <li class="bg-black/30 p-4 rounded-2xl border border-white/5 space-y-1 relative group">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-base text-amber-400 flex items-center gap-2">
+                                <i class="fa-solid ${s.icon || 'fa-shield'}"></i> ${s.title}
+                            </span>
+                            ${currentUser && currentUser.isAdmin ? `<button onclick="deleteSector(${s.id})" class="text-xs text-red-400 hover:text-red-300 bg-red-950/60 px-2 py-1 rounded-lg"><i class="fa-solid fa-trash"></i></button>` : ''}
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">${s.desc}</p>
+                    </li>
+                `).join('');
+            }
+
+            if (rulesList) {
+                rulesList.innerHTML = rulesData.map(r => `
+                    <li class="bg-black/30 p-4 rounded-2xl border border-white/5 space-y-1 relative group">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-base text-brand-red flex items-center gap-2">
+                                <i class="fa-solid fa-circle-exclamation text-xs"></i> ${r.title}
+                            </span>
+                            ${currentUser && currentUser.isAdmin ? `<button onclick="deleteRule(${r.id})" class="text-xs text-red-400 hover:text-red-300 bg-red-950/60 px-2 py-1 rounded-lg"><i class="fa-solid fa-trash"></i></button>` : ''}
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">${r.desc}</p>
+                    </li>
+                `).join('');
+            }
+        }
+
+        function addSector() {
+            const title = document.getElementById('new-sector-title').value.trim();
+            const desc = document.getElementById('new-sector-desc').value.trim();
+            if (!title || !desc) return alert('الرجاء تعبئة بيانات القطاع كاملاً');
+
+            sectorsData.push({ id: Date.now(), title, desc, icon: 'fa-star text-amber-400' });
+            document.getElementById('new-sector-title').value = '';
+            document.getElementById('new-sector-desc').value = '';
+            renderSectorsAndRules();
+        }
+
+        function deleteSector(id) {
+            sectorsData = sectorsData.filter(s => s.id !== id);
+            renderSectorsAndRules();
+        }
+
+        function addRule() {
+            const title = document.getElementById('new-rule-title').value.trim();
+            const desc = document.getElementById('new-rule-desc').value.trim();
+            if (!title || !desc) return alert('الرجاء تعبئة بيانات القانون كاملاً');
+
+            rulesData.push({ id: Date.now(), title, desc });
+            document.getElementById('new-rule-title').value = '';
+            document.getElementById('new-rule-desc').value = '';
+            renderSectorsAndRules();
+        }
+
+        function deleteRule(id) {
+            rulesData = rulesData.filter(r => r.id !== id);
+            renderSectorsAndRules();
+        }
+
+        async function loadAchievements() {
+            try {
+                const res = await fetch('/api/achievements');
+                const data = await res.json();
+                const container = document.getElementById('achievements-list');
+                container.innerHTML = '';
+
+                if (data.length === 0) {
+                    container.innerHTML = '<p class="text-center text-gray-500 col-span-full py-8">لا توجد إنجازات مضافة حالياً.</p>';
+                    return;
+                }
+
+                data.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = "glass-card p-5 rounded-2xl space-y-3 relative overflow-hidden";
+                    
+                    let deleteBtn = '';
+                    if (currentUser && currentUser.isAdmin) {
+                        deleteBtn = `<button onclick="deleteAchievement('${item.id}')" class="absolute top-3 left-3 text-red-400 hover:text-white bg-red-600/80 hover:bg-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 z-20"><i class="fa-solid fa-trash"></i> حذف</button>`;
+                    }
+
+                    card.innerHTML = `
+                        ${deleteBtn}
+                        <div class="flex items-center gap-3 pr-2">
+                            <span class="text-3xl">${item.emoji}</span>
+                            <div>
+                                <h4 class="font-bold text-white text-base">${item.title}</h4>
+                                <span class="text-[10px] text-gray-400">بواسطة: ${item.author} - ${item.createdAt}</span>
+                            </div>
+                        </div>
+                        ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full h-44 object-cover rounded-xl border border-white/10">` : ''}
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                console.error('خطأ في جلب الإنجازات:', err);
+            }
+        }
+
+        async function addAchievement(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('title', document.getElementById('ach-title').value);
+            formData.append('emoji', document.getElementById('ach-emoji').value);
+            formData.append('imageUrl', document.getElementById('ach-image').value);
+            
+            const fileInput = document.getElementById('ach-file');
+            if (fileInput.files[0]) {
+                formData.append('imageFile', fileInput.files[0]);
+            }
+
+            const res = await fetch('/api/achievements', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (res.ok) {
+                document.getElementById('ach-form').reset();
+                loadAchievements();
+            }
+        }
+
+        async function deleteAchievement(id) {
+            if (confirm('هل أنت تأكد من حذف هذا الإنجاز؟')) {
+                try {
+                    const res = await fetch(`/api/achievements/${id}`, { 
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    if (res.ok) {
+                        await loadAchievements();
+                    } else {
+                        alert('حدث خطأ أثناء الحذف.');
+                    }
+                } catch (err) {
+                    console.error('خطأ بالحذف:', err);
+                }
+            }
+        }
+
+        // Init App & Start Live Discord Counter Updates (Every 20 seconds)
+        checkAuth();
+        fetchDiscordOnlineUsers();
+        setInterval(fetchDiscordOnlineUsers, 20000); // 20000ms = 20s
+    </script>
+</body>
+</html>
