@@ -47,9 +47,15 @@ app.get('/api/me', (req, res) => {
 });
 
 app.get('/api/login', (req, res) => {
-    const redirectUri = encodeURIComponent(process.env.REDIRECT_URI || `http://localhost:${PORT}/api/auth/callback`);
-    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds`;
-    res.json({ url: discordAuthUrl });
+    const redirectUri = process.env.REDIRECT_URI || `${req.protocol}://${req.get('host')}/api/auth/callback`;
+    const clientId = process.env.DISCORD_CLIENT_ID;
+
+    if (!clientId) {
+        return res.status(500).json({ error: 'DISCORD_CLIENT_ID غير موجود في متغيرات البيئة' });
+    }
+
+    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify%20guilds`;
+    res.redirect(discordAuthUrl); https://gulf-war-vrp.onrender.com/api/auth/callback
 });
 
 app.get('/api/auth/callback', async (req, res) => {
