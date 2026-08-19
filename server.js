@@ -294,3 +294,36 @@ app.get('/api/server-stats', async (req, res) => {
         res.json({ totalMembers: 0, onlineMembers: 0 });
     }
 });
+
+app.get('/api/server-stats', async (req, res) => {
+    try {
+        const guildId = process.env.DISCORD_GUILD_ID;
+        let guild = client.guilds.cache.get(guildId);
+
+        if (!guild && client.guilds) {
+            guild = await client.guilds.fetch(guildId).catch(() => null);
+        }
+
+        if (!guild) {
+            return res.json({ totalMembers: 0, onlineMembers: 0 });
+        }
+
+        // جلب الأعضاء
+        const members = await guild.members.fetch().catch(() => null);
+        
+        const totalMembers = guild.memberCount;
+        let onlineMembers = 0;
+
+        if (members) {
+            onlineMembers = members.filter(m => m.presence && m.presence.status !== 'offline').size;
+        }
+
+        res.json({
+            totalMembers: totalMembers || 0,
+            onlineMembers: onlineMembers || totalMembers || 0
+        });
+    } catch (err) {
+        console.error('Error fetching guild stats:', err);
+        res.json({ totalMembers: 0, onlineMembers: 0 });
+    }
+});
