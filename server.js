@@ -266,3 +266,31 @@ app.post('/api/server-info', (req, res) => {
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
     res.json({ success: true, serverInfo: data.serverInfo });
 });
+
+const client = require('./bot.js');
+
+// مسار جلب عدد الأعضاء في سيرفر الديسكورد
+app.get('/api/server-stats', async (req, res) => {
+    try {
+        const guildId = process.env.DISCORD_GUILD_ID;
+        const guild = client.guilds.cache.get(guildId);
+
+        if (!guild) {
+            return res.json({ totalMembers: 0, onlineMembers: 0 });
+        }
+
+        // إجمالي عدد الأعضاء في السيرفر
+        const totalMembers = guild.memberCount;
+
+        // الأعضاء المتصلين حالياً (تتطلب تفعيل Presence Intent في Discord Developer Portal)
+        const onlineMembers = guild.members.cache.filter(m => m.presence && m.presence.status !== 'offline').size;
+
+        res.json({
+            totalMembers,
+            onlineMembers: onlineMembers || totalMembers // إرجاع الإجمالي إذا لم تكن خاصية الحضور مفعلة
+        });
+    } catch (err) {
+        console.error('Error fetching guild stats:', err);
+        res.json({ totalMembers: 0, onlineMembers: 0 });
+    }
+});

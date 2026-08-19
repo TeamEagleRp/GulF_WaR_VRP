@@ -33,3 +33,6 @@ client.login(process.env.DISCORD_BOT_TOKEN)
     .catch(err => console.error('❌ Failed to login Discord Bot:', err));
 
 module.exports = client;
+
+// في نهاية ملف bot.js تأكد من تصدير client
+module.exports = client;

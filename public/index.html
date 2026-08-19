@@ -760,5 +760,28 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchDiscordOnlineUsers();
         setInterval(fetchDiscordOnlineUsers, 20000); // 20000ms = 20s
     </script>
+
+    <script>
+  async function updateOnlineCount() {
+      try {
+          const res = await fetch('/api/server-stats');
+          const data = await res.json();
+          
+          // ابحث عن العنصر الذي يعرض عدد المتصلين وحدّث قيمته
+          const countElement = document.getElementById('online-count');
+          if (countElement) {
+              countElement.textContent = data.onlineMembers || data.totalMembers;
+          }
+      } catch (err) {
+          console.error('Failed to update member count', err);
+      }
+  }
+
+  // تشغيل عند فتح الصفحة وتكراره كل 30 ثانية
+  document.addEventListener('DOMContentLoaded', () => {
+      updateOnlineCount();
+      setInterval(updateOnlineCount, 30000);
+  });
+</script>
 </body>
 </html>
